@@ -2,7 +2,7 @@ import telebot
 
 bot = telebot.TeleBot('1698737996:AAFXkYNDMop31dGGAnGrLl_cvjQllmZW3fQ')
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
-keyboard1.row('Узнать прайс лист', 'Написать в тех.поддержку', 'Узнать о процессе буста', 'Узнать о бустерах', 'а', 'б', 'в', 'г', 'д', 'е')
+keyboard1.row('Узнать прайс лист', 'Написать в тех.поддержку', 'Сделать заказ', 'Узнать о процессе буста')
 
 
 @bot.message_handler(commands=['start'])
@@ -15,9 +15,17 @@ def send_text(message):
     if message.text.lower() == 'Привет':
         bot.send_message(message.chat.id, 'Привет, выбери один из пунктов ниже')
     elif message.text.lower() == 'Узнать прайс лист':
-        bot.send_message(message.chat.id, 'Прощай, создатель')
-    elif message.text.lower() == 'я тебя люблю':
-        bot.send_sticker(message.chat.id, 'CAADAgADZgkAAnlc4gmfCor5YbYYRAI')
+        bot.send_message(message.chat.id, '''1.
+        2.
+        3.
+        4.
+        5.''')
+    elif message.text.lower() == 'Написать в тех.поддержку':
+        bot.send_message(message.chat.id, '@azazaatata')
+    elif message.text.lower() == 'Сделать заказ':
+        bot.send_message(message.chat.id, 'Выберети категорию')
+    elif message.text.lower() == 'Узнать о процессе буста':
+        bot.send_message(message.chat.id, '')
 
 
 @bot.message_handler(content_types=['sticker'])
