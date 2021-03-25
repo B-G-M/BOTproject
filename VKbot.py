@@ -97,11 +97,71 @@ def key_payment():
 
 
 def price_elo(have_elo, want_elo):
-	return "Цена Faceit"
+	tir = 0
+	tir2 = 0
+	if have_elo == "lvl 1." or "lvl 2." or "lvl 3.":
+		tir = 1
+	if have_elo == "lvl 4." or "lvl 5." or "lvl 6." or "lvl 7.":
+		tir = 2
+	if have_elo == "lvl 8." or "lvl 9.":
+		tir = 3
+	if have_elo == "lvl 10.":
+		tir = 4
+	if want_elo == "lvl 1." or "lvl 2." or "lvl 3.":
+		tir2 = 1
+	if want_elo == "lvl 4." or "lvl 5." or "lvl 6." or "lvl 7.":
+		tir2 = 2
+	if want_elo == "lvl 8." or "lvl 9.":
+		tir2 = 3
+	if want_elo == "lvl 10.":
+		tir2 = 4
+	if tir2-tir == 0:
+		return "Цена буста - 250 рублей"
+	if tir2-tir == 1:
+		return "Цена буста - 500 рублей"
+	if tir2-tir == 2:
+		return "Цена буста 1000 рублей"
+	if tir2-tir == 3:
+		return "Цена буста 2000 рублей"
 
 
 def price_mm(have_rang, want_rang):
-	return "Цена ММ"
+	tir = 0
+	tir2 = 0
+	if have_rang == "Silver I." or "Silver II." or "Silver III." or "Silver VI." or "Silver Elite." \
+		or "Silver Elite Master.":
+		tir = 1
+	if have_rang == "Gold Nova I." or "Gold Nova II." or "Gold Nova III." or "Gold Nova Master.":
+		tir = 2
+	if have_rang == "Master Guardian I." or "Master Guardian II." or "Master Guardian Elite." \
+		or "Distinguished master guardian.":
+		tir = 3
+	if have_rang == "Legendary eagle." or "Legendary eagle master.":
+		tir = 4
+	if have_rang == "Supreme master first class.":
+		tir = 5
+	if want_rang == "Silver I." or "Silver II." or "Silver III." or "Silver VI." or "Silver Elite." \
+		or "Silver Elite Master.":
+		tir2 = 1
+	if want_rang == "Gold Nova I." or "Gold Nova II." or "Gold Nova III." or "Gold Nova Master.":
+		tir2 = 2
+	if want_rang == "Master Guardian I." or "Master Guardian II." or "Master Guardian Elite." \
+		or "Distinguished master guardian.":
+		tir2 = 3
+	if want_rang == "Legendary eagle." or "Legendary eagle master.":
+		tir2 = 4
+	if want_rang == "Supreme master first class." or "Global Elite.":
+		tir2 = 5
+	if tir2 - tir == 0:
+		return "Цена буста - 250 рублей"
+	if tir2 - tir == 1:
+		return "Цена буста - 450 рублей"
+	if tir2 - tir == 2:
+		return "Цена буста 750 рублей"
+	if tir2 - tir == 3:
+		return "Цена буста 1500 рублей"
+	if tir2 - tir == 4:
+		return "Цена буста 2000 рублей"
 
 
 def write_ls_keyboard(event, message, keyboard):
