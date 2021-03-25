@@ -193,8 +193,8 @@ def main():
 					case = 0
 					write_ls_msg(event, "Текст с инфой.")
 				if case == 0:
-					write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
-											узнать цены на услуги.''', key_start())
+					write_ls_keyboard(event, '''Привет, я бот BOOST CSGO. Здесь Вы можете заказать буст и
+											узнать цены на услуги. Какая услуга Вас интересует?''', key_start())
 					if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
 						continue
 				if case == 1:
@@ -229,7 +229,7 @@ def main():
 						write_ls_msg(event, price_mm(user_rank, user_want_rank))
 						continue
 				if case == 4:
-					write_ls_keyboard(event, "Хз че тут писать.", key_payment())
+					write_ls_keyboard(event, "Можно приступить к оплате или вернуться обратно в меню для выбора другой услуги.", key_payment())
 					continue
 					
 					
