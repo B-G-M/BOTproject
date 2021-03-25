@@ -1,5 +1,7 @@
-import vk_api
+#! /usr/bin/env python37
+# -*- coding: utf-8 -*-
 
+import vk_api
 import vk
 import random
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -9,8 +11,6 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 
 token = '37a55873060ed384d376a08d921213e296fcfaa82afbe78b165c8042cddce28ddd0614b73d3fe777cb48d'
 vk_session = vk_api.VkApi(token=token)
-# longpoll = VkBotLongPoll(vk_session, 203427725)
-# vk = vk_session.get_api()
 ls_longpoll = VkLongPoll(vk_session)
 ls_vk = vk_session.get_api()
 
@@ -25,8 +25,8 @@ def create_empty_keyboard():
 
 
 def key_start():
-	keyboard = vk_api.keyboard.VkKeyboard(one_time=False)
-	keyboard.add_button("Узнать о процессе буста.", color=VkKeyboardColor.SECONDARY)
+	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
+	keyboard.add_button("Узнать о процессе буста.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Заказать буст Faceit.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
@@ -104,21 +104,20 @@ def price_mm(have_rang, want_rang):
 	return "Цена ММ"
 
 
+def write_ls_keyboard(event, message, keyboard):
+	ls_vk.messages.send(user_id=event.user_id, random_id=get_random_id(), keyboard=keyboard, message=message)
+
+
 def lvl_1():
 	for event in ls_longpoll.listen():
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			ls_vk.messages.send(
-				user_id=event.user_id,
-				random_id=get_random_id(),
-				keyboard=key_start(),
-				message='''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
-				узнать цены на услуги.'''
-			)
+			write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
+									узнать цены на услуги.''', key_start())
+			if event.text == "Узнать о процессе буста.":
+				write_ls_msg(event.user_id, "Текст с инфой.")
 			if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
 				lvl_2()
-			if event.text == "Узнать о процессе буста.":
-				write_ls_msg(event.user_id, 'Текст с инфой')
-				lvl_1()
+				continue
 
 
 def lvl_2():
@@ -127,32 +126,23 @@ def lvl_2():
 			user_elo = "undefined"
 			user_rank = "undefined"
 			if event.text == "Заказать буст Faceit.":
-				ls_vk.messages.send(
-					user_id=event.user_id,
-					random_id=get_random_id(),
-					keyboard=key_elo(),
-					message="Какой у тебя lvl Faceit ?"
-				)
-				if event.text == 'Назад.':
-					lvl_1()
-				else:
+				write_ls_keyboard(event, "Какой у тебя lvl Faceit ?", key_elo())
+				if event.text == "Назад.":
+					return
+				elif event.text == "lvl 0.":
 					check_answer = True
 					user_elo = event.text
 					lvl_3(check_answer, user_elo, user_rank)
+					continue
 			elif event.text == "Заказать буст MM.":
-				ls_vk.messages.send(
-					user_id=event.user_id,
-					random_id=get_random_id(),
-					keyboard=key_rank_mm(),
-					message='Какое у тебя звание ?'
-				)
-				if event.text == 'Назад.':
-					lvl_1()
-				else:
+				write_ls_keyboard(event, "Какое у тебя звание ?", key_rank_mm())
+				if event.text == "Назад.":
+					return
+				elif event.text != "Назад.":
 					check_answer = False
 					user_rank = event.text
 					lvl_3(check_answer, user_elo, user_rank)
-			lvl_1()
+					continue
 
 
 def lvl_3(check_answer, user_elo, user_rank):
@@ -161,25 +151,17 @@ def lvl_3(check_answer, user_elo, user_rank):
 			user_want_rank = "undefined"
 			user_want_elo = "undefined"
 			if check_answer:
-				ls_vk.messages.send(
-					user_id=event.user_id,
-					random_id=get_random_id(),
-					keyboard=key_elo(),
-					message="Какой lvl ты хочешь ?"
-				)
+				write_ls_keyboard(event, "Какой lvl ты хочешь ?", key_elo())
 				if event.text == "Назад.":
-					lvl_2()
+					event.text = "Заказать буст Faceit."
+					return
 				user_want_elo = event.text
 				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
 			elif not check_answer:
-				ls_vk.messages.send(
-					user_id=event.user_id,
-					random_id=get_random_id(),
-					keyboard=key_rank_mm(),
-					message="Какое звание ты хочешь ?"
-				)
+				write_ls_keyboard(event, "Какое звание ты хочешь ?", key_rank_mm())
 				if event.text == "Назад.":
-					lvl_2()
+					event.text = "Заказать буст MM."
+					return
 				user_want_rank = event.text
 				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
 
@@ -188,15 +170,11 @@ def lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo):
 	for event in ls_longpoll.listen():
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
 			if check_answer:
+				write_ls_keyboard(event, "Стоимость буста: ", key_end())
 				write_ls_msg(event.user_id, price_elo(user_elo, user_want_elo))
 			elif not check_answer:
+				write_ls_keyboard(event, "Стоимость буста: ", key_end())
 				write_ls_msg(event.user_id, price_mm(user_rank, user_want_rank))
-			ls_vk.messages.send(
-				user_id=event.user_id,
-				random_id=get_random_id(),
-				keyboard=key_end(),
-				message="Хз че тут написать"
-			)
 			if event.text == "Назад.":
 				lvl_3(check_answer, user_elo, user_rank)
 			if event.text == "Перейти к оплате.":
@@ -205,18 +183,25 @@ def lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo):
 
 def lvl_5(check_answer, user_elo, user_rank, user_want_rank, user_want_elo):
 	for event in ls_longpoll.listen():
-		ls_vk.messages.send(
-			user_id=event.user_id,
-			random_id=get_random_id(),
-			keyboard=key_payment(),
-			message="Тут тоже"
-		)
-		if event.text == "Назад.":
-			lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
-		elif event.text == "Вернуться в начало.":
-			lvl_1()
+		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
+			write_ls_keyboard(event, "{Хз че тут писать.", key_payment())
+			if event.text == "Назад.":
+				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
+			elif event.text == "Вернуться в начало.":
+				lvl_1()
 
 
-lvl_1()
+for event in ls_longpoll.listen():
+	if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
+		write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
+								узнать цены на услуги.''', key_start())
+		if event.text == "Узнать о процессе буста.":
+			write_ls_msg(event.user_id, "Текст с инфой.")
+			continue
+		if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
+			lvl_2()
+			continue
+		else:
+			continue
 
 
