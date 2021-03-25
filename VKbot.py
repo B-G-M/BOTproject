@@ -88,8 +88,9 @@ def key_end():
 
 
 def key_payment():
-	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
+	keyboard = vk_api.keyboard.VkKeyboard(one_time=False)
 	keyboard.add_vkpay_button(hash="action=transfer-to-group&group_id=203427725")
+	keyboard.add_line()
 	keyboard.add_button("Вернуться в начало.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Назад.", color=VkKeyboardColor.NEGATIVE)
@@ -180,7 +181,7 @@ def main():
 		for event in ls_longpoll.listen():
 			if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
 				if event.text == "Назад.":
-					if case <= 1:
+					if case != 0:
 						case = case - 1
 					else:
 						event.text = "undefined"
@@ -197,12 +198,12 @@ def main():
 					if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
 						continue
 				if case == 1:
-					if event.text or message == "Заказать буст Faceit.":
+					if event.text == "Заказать буст Faceit." or message == "Заказать буст Faceit.":
 						write_ls_keyboard(event, "Какой у тебя lvl Faceit ?", key_elo())
 						check_answer = True
 						user_elo = event.text
 						continue
-					elif event.text or message == "Заказать буст MM.":
+					elif event.text == "Заказать буст MM." or message == "Заказать буст MM.":
 						write_ls_keyboard(event, "Какое у тебя звание ?", key_rank_mm())
 						check_answer = False
 						user_rank = event.text
