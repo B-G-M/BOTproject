@@ -15,18 +15,14 @@ ls_longpoll = VkLongPoll(vk_session)
 ls_vk = vk_session.get_api()
 
 
-def write_ls_msg(user_id, message):
-	ls_vk.messages.send(user_id=user_id, message=message, random_id=get_random_id())
-
-
-def create_empty_keyboard():
-	keyboard = vk_api.keyboard.VkKeyboard.get_empty_keyboard()
-	return keyboard
+def write_ls_msg(event, message):
+	ls_vk.messages.send(user_id=event.user_id, message=message, random_id=get_random_id())
+	return
 
 
 def key_start():
-	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
-	keyboard.add_button("Узнать о процессе буста.", color=VkKeyboardColor.PRIMARY)
+	keyboard = vk_api.keyboard.VkKeyboard(one_time=False)
+	keyboard.add_button("Узнать о процессе буста.", color=VkKeyboardColor.SECONDARY)
 	keyboard.add_line()
 	keyboard.add_button("Заказать буст Faceit.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
@@ -36,8 +32,8 @@ def key_start():
 
 def key_rank_mm():
 	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
-	keyboard.add_button("Silver I", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Silver II", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Silver I.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Silver II.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Silver III.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Silver VI.", color=VkKeyboardColor.PRIMARY)
@@ -57,6 +53,7 @@ def key_rank_mm():
 	keyboard.add_button("Legendary eagle.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Legendary eagle master.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Supreme master first class.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Global Elite.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Назад.", color=VkKeyboardColor.NEGATIVE)
 	return keyboard.get_keyboard()
@@ -64,7 +61,6 @@ def key_rank_mm():
 
 def key_elo():
 	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
-	keyboard.add_button("lvl 0.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("lvl 1.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("lvl 2.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("lvl 3.", color=VkKeyboardColor.PRIMARY)
@@ -76,6 +72,7 @@ def key_elo():
 	keyboard.add_line()
 	keyboard.add_button("lvl 8.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("lvl 9.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("lvl 10.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Назад.", color=VkKeyboardColor.NEGATIVE)
 	return keyboard.get_keyboard()
 
@@ -93,6 +90,9 @@ def key_end():
 def key_payment():
 	keyboard = vk_api.keyboard.VkKeyboard(one_time=True)
 	keyboard.add_vkpay_button(hash="action=transfer-to-group&group_id=203427725")
+	keyboard.add_button("Вернуться в начало.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_line()
+	keyboard.add_button("Назад.", color=VkKeyboardColor.NEGATIVE)
 	return keyboard.get_keyboard()
 
 
@@ -122,7 +122,7 @@ def price_elo(have_elo, want_elo):
 	if tir2-tir == 2:
 		return "Цена буста 1000 рублей"
 	if tir2-tir == 3:
-		return "Цена буста 2000 рублей"
+		return "2000 рублей"
 
 
 def price_mm(have_rang, want_rang):
@@ -161,107 +161,75 @@ def price_mm(have_rang, want_rang):
 	if tir2 - tir == 3:
 		return "Цена буста 1500 рублей"
 	if tir2 - tir == 4:
-		return "Цена буста 2000 рублей"
+		return "2000 рублей"
 
 
 def write_ls_keyboard(event, message, keyboard):
 	ls_vk.messages.send(user_id=event.user_id, random_id=get_random_id(), keyboard=keyboard, message=message)
 
 
-def lvl_1():
-	for event in ls_longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
-									узнать цены на услуги.''', key_start())
-			if event.text == "Узнать о процессе буста.":
-				write_ls_msg(event.user_id, "Текст с инфой.")
-			if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
-				lvl_2()
-				continue
-
-
-def lvl_2():
-	for event in ls_longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			user_elo = "undefined"
-			user_rank = "undefined"
-			if event.text == "Заказать буст Faceit.":
-				write_ls_keyboard(event, "Какой у тебя lvl Faceit ?", key_elo())
+def main():
+	message = "undefined"
+	user_elo = "undefined"
+	user_rank = "undefined"
+	user_want_rank = "undefined"
+	user_want_elo = "undefined"
+	check_answer = "undefined"
+	case = -1
+	while True:
+		for event in ls_longpoll.listen():
+			if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
 				if event.text == "Назад.":
-					return
-				elif event.text == "lvl 0.":
-					check_answer = True
-					user_elo = event.text
-					lvl_3(check_answer, user_elo, user_rank)
+					if case <= 1:
+						case = case - 1
+					else:
+						event.text = "undefined"
+				else:
+					case = case + 1
+				if event.text == "Вернуться в начало.":
+					case = 0
+				if event.text == "Узнать о процессе буста.":
+					case = 0
+					write_ls_msg(event, "Текст с инфой.")
+				if case == 0:
+					write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
+											узнать цены на услуги.''', key_start())
+					if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
+						continue
+				if case == 1:
+					if event.text or message == "Заказать буст Faceit.":
+						write_ls_keyboard(event, "Какой у тебя lvl Faceit ?", key_elo())
+						check_answer = True
+						user_elo = event.text
+						continue
+					elif event.text or message == "Заказать буст MM.":
+						write_ls_keyboard(event, "Какое у тебя звание ?", key_rank_mm())
+						check_answer = False
+						user_rank = event.text
+						continue
+				if case == 2:
+					if check_answer:
+						write_ls_keyboard(event, "Какой lvl ты хочешь ?", key_elo())
+						user_want_elo = event.text
+						message = "Заказать буст Faceit."
+						continue
+					elif not check_answer:
+						write_ls_keyboard(event, "Какое звание ты хочешь ?", key_rank_mm())
+						user_want_rank = event.text
+						message = "Заказать буст MM."
+						continue
+				if case == 3:
+					if check_answer:
+						write_ls_keyboard(event, "Стоимость буста: ", key_end())
+						write_ls_msg(event, price_elo(user_elo, user_want_elo))
+						continue
+					elif not check_answer:
+						write_ls_keyboard(event, "Стоимость буста: ", key_end())
+						write_ls_msg(event, price_mm(user_rank, user_want_rank))
+						continue
+				if case == 4:
+					write_ls_keyboard(event, "Хз че тут писать.", key_payment())
 					continue
-			elif event.text == "Заказать буст MM.":
-				write_ls_keyboard(event, "Какое у тебя звание ?", key_rank_mm())
-				if event.text == "Назад.":
-					return
-				elif event.text != "Назад.":
-					check_answer = False
-					user_rank = event.text
-					lvl_3(check_answer, user_elo, user_rank)
-					continue
-
-
-def lvl_3(check_answer, user_elo, user_rank):
-	for event in ls_longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			user_want_rank = "undefined"
-			user_want_elo = "undefined"
-			if check_answer:
-				write_ls_keyboard(event, "Какой lvl ты хочешь ?", key_elo())
-				if event.text == "Назад.":
-					event.text = "Заказать буст Faceit."
-					return
-				user_want_elo = event.text
-				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
-			elif not check_answer:
-				write_ls_keyboard(event, "Какое звание ты хочешь ?", key_rank_mm())
-				if event.text == "Назад.":
-					event.text = "Заказать буст MM."
-					return
-				user_want_rank = event.text
-				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
-
-
-def lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo):
-	for event in ls_longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			if check_answer:
-				write_ls_keyboard(event, "Стоимость буста: ", key_end())
-				write_ls_msg(event.user_id, price_elo(user_elo, user_want_elo))
-			elif not check_answer:
-				write_ls_keyboard(event, "Стоимость буста: ", key_end())
-				write_ls_msg(event.user_id, price_mm(user_rank, user_want_rank))
-			if event.text == "Назад.":
-				lvl_3(check_answer, user_elo, user_rank)
-			if event.text == "Перейти к оплате.":
-				lvl_5(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
-
-
-def lvl_5(check_answer, user_elo, user_rank, user_want_rank, user_want_elo):
-	for event in ls_longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-			write_ls_keyboard(event, "{Хз че тут писать.", key_payment())
-			if event.text == "Назад.":
-				lvl_4(check_answer, user_elo, user_rank, user_want_rank, user_want_elo)
-			elif event.text == "Вернуться в начало.":
-				lvl_1()
-
-
-for event in ls_longpoll.listen():
-	if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-		write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
-								узнать цены на услуги.''', key_start())
-		if event.text == "Узнать о процессе буста.":
-			write_ls_msg(event.user_id, "Текст с инфой.")
-			continue
-		if event.text == "Заказать буст Faceit." or "Заказать буст MM.":
-			lvl_2()
-			continue
-		else:
-			continue
-
-
+					
+					
+main()
