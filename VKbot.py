@@ -38,22 +38,22 @@ def key_rank_mm():
 	keyboard.add_line()
 	keyboard.add_button("Silver VI.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Silver Elite.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Silver Elite Master.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Silver Master.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Gold Nova I.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Gold Nova II.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Gold Nova III.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button("Gold Nova Master.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Master Guardian I.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Master Guardian II.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("G.Nova Master.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Guardian I.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Guardian II.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button("Master Guardian Elite.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Distinguished master guardian.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Legendary eagle.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Guardian Elite.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Big Star.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Eagle.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button("Legendary eagle master.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Supreme master first class.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Eagle master.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("Supreme.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Global Elite.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Назад.", color=VkKeyboardColor.NEGATIVE)
@@ -101,19 +101,19 @@ def key_payment():
 def price_elo(have_elo, want_elo):
 	tir = 0
 	tir2 = 0
-	if have_elo == "lvl 1." or "lvl 2." or "lvl 3.":
+	if have_elo == "lvl 1." or have_elo == "lvl 2." or have_elo == "lvl 3.":
 		tir = 1
-	if have_elo == "lvl 4." or "lvl 5." or "lvl 6." or "lvl 7.":
+	if have_elo == "lvl 4." or have_elo == "lvl 5." or have_elo == "lvl 6." or have_elo == "lvl 7.":
 		tir = 2
-	if have_elo == "lvl 8." or "lvl 9.":
+	if have_elo == "lvl 8." or have_elo == "lvl 9.":
 		tir = 3
 	if have_elo == "lvl 10.":
 		tir = 4
-	if want_elo == "lvl 1." or "lvl 2." or "lvl 3.":
+	if want_elo == "lvl 1." or want_elo == "lvl 2." or want_elo == "lvl 3.":
 		tir2 = 1
-	if want_elo == "lvl 4." or "lvl 5." or "lvl 6." or "lvl 7.":
+	if want_elo == "lvl 4." or want_elo == "lvl 5." or want_elo == "lvl 6." or want_elo == "lvl 7.":
 		tir2 = 2
-	if want_elo == "lvl 8." or "lvl 9.":
+	if want_elo == "lvl 8." or want_elo == "lvl 9.":
 		tir2 = 3
 	if want_elo == "lvl 10.":
 		tir2 = 4
@@ -130,29 +130,31 @@ def price_elo(have_elo, want_elo):
 def price_mm(have_rang, want_rang):
 	tir = 0
 	tir2 = 0
-	if have_rang == "Silver I." or "Silver II." or "Silver III." or "Silver VI." or "Silver Elite." \
-		or "Silver Elite Master.":
+	if have_rang == "Silver I." or have_rang == "Silver II." or have_rang == "Silver III." or have_rang == "Silver VI." \
+		or have_rang == "Silver Elite." or have_rang == "Silver Master.":
 		tir = 1
-	if have_rang == "Gold Nova I." or "Gold Nova II." or "Gold Nova III." or "Gold Nova Master.":
+	if have_rang == "Gold Nova I." or have_rang == "Gold Nova II." or have_rang == "Gold Nova III." \
+		or have_rang == "G.Nova Master.":
 		tir = 2
-	if have_rang == "Master Guardian I." or "Master Guardian II." or "Master Guardian Elite." \
-		or "Distinguished master guardian.":
+	if have_rang == "Guardian I." or have_rang == "Guardian II." or have_rang == "Guardian Elite." \
+		or have_rang == "Big Star.":
 		tir = 3
-	if have_rang == "Legendary eagle." or "Legendary eagle master.":
+	if have_rang == "Eagle." or have_rang == "Eagle master.":
 		tir = 4
-	if have_rang == "Supreme master first class.":
+	if have_rang == "Supreme.":
 		tir = 5
-	if want_rang == "Silver I." or "Silver II." or "Silver III." or "Silver VI." or "Silver Elite." \
-		or "Silver Elite Master.":
+	if want_rang == "Silver I." or want_rang == "Silver II." or want_rang == "Silver III." or want_rang == "Silver VI." \
+		or want_rang == "Silver Elite." or want_rang == "Silver Master.":
 		tir2 = 1
-	if want_rang == "Gold Nova I." or "Gold Nova II." or "Gold Nova III." or "Gold Nova Master.":
+	if want_rang == "Gold Nova I." or want_rang == "Gold Nova II." or want_rang == "Gold Nova III." \
+		or want_rang == "G.Nova Master.":
 		tir2 = 2
-	if want_rang == "Master Guardian I." or "Master Guardian II." or "Master Guardian Elite." \
-		or "Distinguished master guardian.":
+	if want_rang == "Guardian I." or want_rang == "Guardian II." or want_rang == "Guardian Elite." \
+		or want_rang == "Big Star.":
 		tir2 = 3
-	if want_rang == "Legendary eagle." or "Legendary eagle master.":
+	if want_rang == "Eagle." or want_rang == "Eagle master.":
 		tir2 = 4
-	if want_rang == "Supreme master first class." or "Global Elite.":
+	if want_rang == "Supreme." or want_rang == "Global Elite.":
 		tir2 = 5
 	if tir2 - tir == 0:
 		return "Цена буста - 250 рублей"
