@@ -244,7 +244,8 @@ def main():
 						write_ls_msg(event, price_mm(user_rank, user_want_rank))
 						continue
 				if case == 4:
-					write_ls_keyboard(event, "Хз че тут писать.", key_payment())
+					write_ls_keyboard(event, "Можно приступить к оплате или вернуться \
+											обратно в меню для выбора другой услуги.", key_payment())
 					continue
 					
 					
