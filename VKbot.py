@@ -43,14 +43,15 @@ def key_rank_mm():
 	keyboard.add_button("Gold Nova I.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Gold Nova II.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Gold Nova III.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Gold Nova Master.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
+	keyboard.add_button("Gold Nova Master.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Master Guardian I.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Master Guardian II.", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Master Guardian Elite.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
+	keyboard.add_button("Master Guardian Elite.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Distinguished master guardian.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Legendary eagle.", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_line()
 	keyboard.add_button("Legendary eagle master.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Supreme master first class.", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("Global Elite.", color=VkKeyboardColor.PRIMARY)
@@ -187,11 +188,23 @@ def main():
 						event.text = "undefined"
 				else:
 					case = case + 1
+					
+				if user_elo == "Какой у тебя lvl Faceit ?":
+					user_elo = event.text
+				if user_rank == "Какое у тебя звание ?":
+					user_rank = event.text
+				if user_want_elo == "Какой lvl ты хочешь ?":
+					user_want_elo = event.text
+				if user_want_rank == "Какое звание ты хочешь ?":
+					user_want_rank = event.text
+					
 				if event.text == "Вернуться в начало.":
 					case = 0
+					message = "undefined"
 				if event.text == "Узнать о процессе буста.":
 					case = 0
-					write_ls_msg(event, "Текст с инфой.")
+					write_ls_msg(event, "Буст происходит с передачей аккаунта бустеру. \
+										Сроки выполнения услуги зависят от сложности заказа.")
 				if case == 0:
 					write_ls_keyboard(event, '''Привет, я бот BoostCsGo. Здесь вы можете заказать буст и
 											узнать цены на услуги.''', key_start())
@@ -201,22 +214,22 @@ def main():
 					if event.text == "Заказать буст Faceit." or message == "Заказать буст Faceit.":
 						write_ls_keyboard(event, "Какой у тебя lvl Faceit ?", key_elo())
 						check_answer = True
-						user_elo = event.text
+						user_elo = "Какой у тебя lvl Faceit ?"
 						continue
 					elif event.text == "Заказать буст MM." or message == "Заказать буст MM.":
 						write_ls_keyboard(event, "Какое у тебя звание ?", key_rank_mm())
 						check_answer = False
-						user_rank = event.text
+						user_rank = "Какое у тебя звание ?"
 						continue
 				if case == 2:
 					if check_answer:
 						write_ls_keyboard(event, "Какой lvl ты хочешь ?", key_elo())
-						user_want_elo = event.text
+						user_want_elo = "Какой lvl ты хочешь ?"
 						message = "Заказать буст Faceit."
 						continue
 					elif not check_answer:
 						write_ls_keyboard(event, "Какое звание ты хочешь ?", key_rank_mm())
-						user_want_rank = event.text
+						user_want_rank = "Какое звание ты хочешь ?"
 						message = "Заказать буст MM."
 						continue
 				if case == 3:
